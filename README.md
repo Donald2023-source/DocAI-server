@@ -167,15 +167,6 @@ DocAI-Server/
   }
   ```
 
----
-
-### 4. OAuth 2.0 Endpoints
-* **`GET /api/auth/google`**: Redirects user to Google OAuth consent screen.
-* **`GET /api/auth/google/callback`**: Handles OAuth callback, exchanges code for access token, fetches profile, and redirects to frontend with session token.
-* **`GET /api/auth/github`**: Redirects user to GitHub OAuth authorization.
-* **`GET /api/auth/github/callback`**: Handles GitHub callback, exchanges code, fetches profile, and redirects to frontend with session token.
-
----
 
 ### 5. Health Check
 * **Endpoint**: `GET /api/health`
