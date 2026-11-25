@@ -1,8 +1,8 @@
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import authRouter from "./routes/auth.js";
-
-dotenv.config();
+import documentRouter from "./routes/documents.js";
+import mongoose from "mongoose";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,14 +24,27 @@ app.use(express.json());
 
 // API Routes
 app.use("/api/auth", authRouter);
+app.use("/api/documents", documentRouter);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+async function startServer() {
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is missing from environment variables");
+  }
+
+  await mongoose.connect(process.env.MONGODB_URI);
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error("Server startup failed:", error);
+  process.exitCode = 1;
 });
 
 export default app;

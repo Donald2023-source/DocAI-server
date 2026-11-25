@@ -15,6 +15,7 @@
 
 # production
 /build
+/storage/documents/
 
 # misc
 .DS_Store

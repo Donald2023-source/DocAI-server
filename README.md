@@ -180,6 +180,19 @@ DocAI-Server/
 
 ---
 
+## Document Storage
+
+Documents are saved on the server in `storage/documents/`; MongoDB stores their
+metadata. Set `MONGODB_URI` in `.env` before starting the server. Uploads require
+a Bearer token and accept one PDF, DOCX, or TXT file up to 10 MB using the
+multipart field name `document`.
+
+* `POST /api/documents` — upload a document
+* `GET /api/documents/me` — list the authenticated user's documents
+* `GET /api/documents/:id/file` — download one of the authenticated user's documents
+
+---
+
 ## JWT Authentication Middleware
 
 To protect any future routes created by teammates, import the [`protect`](file:///home/nikola/Documents/docAI/DocAI-Server/middleware/authMiddleware.js) middleware:
