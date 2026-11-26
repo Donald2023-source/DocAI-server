@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import multer from "multer";
 import Document from "../models/Document.js";
-import { protect } from "../middleware/authMiddleware.js";
+// import authenticateUser from "../middleware/auth.js";
 
 const router = express.Router();
 const uploadDirectory = fileURLToPath(
@@ -143,4 +143,46 @@ router.get("/:id/file", protect, async (req, res) => {
   }
 });
 
+/**
+ * GET /api/documents/:id
+ * Retrieves a single document using its ID.
+ */
+router.get("/:id", async (req, res) => {
+  try {
+    // Get the document ID from the URL
+    const { id } = req.params;
+
+    // Validate the MongoDB ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid document ID",
+      });
+    }
+
+    // Find the document in the database
+    const document = await Document.findById(id)
+      .select("_id userId fileName fileUrl mimeType size createdAt updatedAt")
+      .lean();
+
+    // Check if the document exists
+    if (!document) {
+      return res.status(404).json({
+        message: "Document not found",
+      });
+    }
+
+    // Return the document
+    return res.status(200).json({
+      message: "Document retrieved successfully",
+      document,
+    });
+
+  } catch (error) {
+    console.error("GET /api/documents/:id failed:", error);
+
+    return res.status(500).json({
+      message: "Failed to retrieve document",
+    });
+  }
+});
 export default router;
